@@ -1,0 +1,6 @@
+export { default as Egg } from '@/egg'
+export { default as Enemy } from '@/enemy'
+export { default as Larva } from '@/larva'
+export { default as Obstacle } from '@/obstacle'
+export { default as Particle, Firefly, Spark } from '@/particle'
+export { default as Player } from '@/player'
