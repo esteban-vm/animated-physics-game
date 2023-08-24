@@ -22,6 +22,8 @@ export default class Game {
   public interval
   public eggInterval
   public score
+  public winningScore
+  public gameOver
   private numberOfObstacles
   private numberOfEggs
 
@@ -46,6 +48,8 @@ export default class Game {
     this.interval = 1_000 / this.fps
     this.eggInterval = 500
     this.score = 0
+    this.winningScore = 5
+    this.gameOver = false
     this.numberOfObstacles = 10
     this.numberOfEggs = 5
     this.init()
@@ -71,7 +75,7 @@ export default class Game {
       this.timer = 0
     }
     this.timer += delta
-    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs) {
+    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs && !this.gameOver) {
       this.addEgg()
       this.eggTimer = 0
     } else {
@@ -84,6 +88,34 @@ export default class Game {
       context.fillText(`Lost: ${this.lostHatchings}`, 25, 100)
     }
     context.restore()
+    if (this.score >= this.winningScore) {
+      this.gameOver = true
+      context.save()
+      context.fillStyle = 'rgba(0, 0, 0, 0.5)'
+      context.fillRect(0, 0, this.width, this.height)
+      context.fillStyle = 'white'
+      context.textAlign = 'center'
+      context.shadowOffsetX = 4
+      context.shadowOffsetY = 4
+      context.shadowColor = 'black'
+      let message1: string
+      let message2: string
+      const x = this.width * 0.5
+      const y = this.height * 0.5
+      if (this.lostHatchings <= 5) {
+        message1 = 'Bullseye!!!'
+        message2 = 'You bullied the bullies'
+      } else {
+        message1 = 'Bullocks!'
+        message2 = `You lost ${this.hatchlings} hatchlings, don't be a pushover!`
+      }
+      context.font = '130px Bangers'
+      context.fillText(message1, x, y - 30)
+      context.font = '40px Bangers'
+      context.fillText(message2, x, y + 30)
+      context.fillText(`Final score: ${this.score}. Press "R" to butt heads again!`, x, y + 80)
+      context.restore()
+    }
   }
 
   private init() {

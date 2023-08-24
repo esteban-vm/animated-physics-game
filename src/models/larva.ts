@@ -71,7 +71,7 @@ export default class Larva implements SpriteSheet {
     if (this.collisionY < this.game.topMargin) {
       this.markedForDeletion = true
       this.game.removeObjects()
-      this.game.score++
+      if (!this.game.gameOver) this.game.score++
       for (let index = 1; index <= 3; index++) {
         this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, 'yellow'))
       }

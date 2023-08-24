@@ -1,11 +1,17 @@
 @import 'normalize.css';
 
+@font-face {
+  font-family: 'Bangers';
+  src: url('/fonts/Bangers-Regular.ttf');
+}
+
 body {
   background-color: black;
 }
 
 canvas {
   background-image: url(/images/background.png);
+  font-family: 'Bangers', cursive;
   position: absolute;
   top: 50%;
   left: 50%;

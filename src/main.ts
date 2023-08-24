@@ -9,7 +9,7 @@ window.addEventListener('load', function () {
   context.fillStyle = 'aliceblue'
   context.strokeStyle = 'black'
   context.lineWidth = 3
-  context.font = '40px Helvetica'
+  context.font = '40px Bangers'
   context.textAlign = 'center'
 
   const game = new Game(canvas)
