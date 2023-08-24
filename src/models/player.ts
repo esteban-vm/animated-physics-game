@@ -102,6 +102,13 @@ export default class Player implements SpriteSheet {
     })
   }
 
+  public restart() {
+    this.collisionX = this.game.width * 0.5
+    this.collisionY = this.game.height * 0.5
+    this.spriteX = this.collisionX - this.width * 0.5
+    this.spriteY = this.collisionY - this.height * 0.5 - 100
+  }
+
   private rotate() {
     const angle = Math.atan2(this.distanceY, this.distanceX)
     if (angle < -2.74 || angle > 2.74) this.frameY = 6

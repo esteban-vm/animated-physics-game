@@ -57,10 +57,10 @@ export default class Egg implements Sprite {
   }
 
   private handleCollisions() {
-    const collisionSprites = [this.game.player, ...this.game.obstacles, ...this.game.enemies]
+    const collisionSprites = [this.game.player, ...this.game.obstacles, ...this.game.enemies, ...this.game.hatchlings]
     collisionSprites.forEach((sprite) => {
       const { collides, d, sum, dx, dy } = this.game.checkCollision(this, sprite)
-      if (collides) {
+      if (collides && !this.game.gameOver) {
         const unitX = dx / d
         const unitY = dy / d
         const margin = sum + 1

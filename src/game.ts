@@ -48,7 +48,7 @@ export default class Game {
     this.interval = 1_000 / this.fps
     this.eggInterval = 500
     this.score = 0
-    this.winningScore = 5
+    this.winningScore = 30
     this.gameOver = false
     this.numberOfObstacles = 10
     this.numberOfEggs = 5
@@ -163,6 +163,7 @@ export default class Game {
 
     window.addEventListener('keydown', (event) => {
       if (event.key === 'd') this.debug = !this.debug
+      else if (event.key === 'r') this.restart()
     })
   }
 
@@ -172,6 +173,20 @@ export default class Game {
 
   private addEnemy() {
     this.enemies.push(new Enemy(this))
+  }
+
+  private restart() {
+    this.player.restart()
+    this.obstacles = []
+    this.eggs = []
+    this.enemies = []
+    this.hatchlings = []
+    this.particles = []
+    this.pointer = { x: this.player.collisionX, y: this.player.collisionY, pressed: false }
+    this.score = 0
+    this.lostHatchings = 0
+    this.gameOver = false
+    this.init()
   }
 
   public checkCollision(sprite1: Sprite, sprite2: Sprite) {
