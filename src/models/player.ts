@@ -14,6 +14,7 @@ export default class Player implements SpriteSheet {
   public spriteY!: number
   public frameX
   public frameY
+  private maxFrame
   private speedX
   private speedY
   private distanceX
@@ -32,6 +33,7 @@ export default class Player implements SpriteSheet {
     this.height = this.spriteHeight
     this.frameX = 0
     this.frameY = 5
+    this.maxFrame = 58
     this.speedX = 0
     this.speedY = 0
     this.distanceX = 0
@@ -119,6 +121,8 @@ export default class Player implements SpriteSheet {
     else if (angle < 1.17) this.frameY = 3
     else if (angle < 1.96) this.frameY = 4
     else if (angle < 2.74) this.frameY = 5
+    if (this.frameX < this.maxFrame) this.frameX++
+    else this.frameX = 0
   }
 
   private setBoundaries() {
