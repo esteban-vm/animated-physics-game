@@ -20,7 +20,7 @@ export default class Obstacle implements SpriteSheet {
     this.collisionRadius = 60
     this.collisionX = Math.random() * this.game.width
     this.collisionY = Math.random() * this.game.height
-    this.image = document.getElementById('obstacles') as HTMLImageElement
+    this.image = document.getElementById('obstacle') as HTMLImageElement
     this.spriteWidth = 250
     this.spriteHeight = 250
     this.width = this.spriteWidth

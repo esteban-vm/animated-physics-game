@@ -24,7 +24,7 @@ export default class Larva implements SpriteSheet {
     this.collisionRadius = 30
     this.collisionX = x
     this.collisionY = y
-    this.image = document.getElementById('larva_sprite') as HTMLImageElement
+    this.image = document.getElementById('larva') as HTMLImageElement
     this.spriteWidth = 150
     this.spriteHeight = 150
     this.width = this.spriteWidth

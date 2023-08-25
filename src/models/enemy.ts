@@ -96,7 +96,7 @@ export class ToadSkin extends Enemy {
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('toad_sprite') as HTMLImageElement
+    this.image = document.getElementById('toad') as HTMLImageElement
     this.spriteWidth = 154
     this.spriteHeight = 238
     this.width = this.spriteWidth
@@ -121,7 +121,7 @@ export class BarkSkin extends Enemy {
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('bark_sprite') as HTMLImageElement
+    this.image = document.getElementById('bark') as HTMLImageElement
     this.spriteWidth = 183
     this.spriteHeight = 280
     this.width = this.spriteWidth
