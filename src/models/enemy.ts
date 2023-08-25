@@ -11,17 +11,19 @@ export default abstract class Enemy implements SpriteSheet {
   public abstract width: number
   public abstract height: number
   public spriteX!: number
-  public spriteY!: number
+  public abstract spriteY: number
   public frameX
   public frameY
+  private maxFrame
   private speedX
 
   constructor(game: Game) {
     this.game = game
     this.collisionRadius = 30
     this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
-    this.frameX = Math.floor(Math.random() * 2)
+    this.frameX = 0
     this.frameY = Math.floor(Math.random() * 4)
+    this.maxFrame = 38
     this.speedX = Math.random() * 3 + 0.5
   }
 
@@ -56,8 +58,9 @@ export default abstract class Enemy implements SpriteSheet {
   }
 
   public update() {
+    if (this.frameX < this.maxFrame) this.frameX++
+    else this.frameX = 0
     this.spriteX = this.collisionX - this.width * 0.5
-    this.spriteY = this.collisionY - this.height + 40
     this.collisionX -= this.speedX
     if (this.spriteX + this.width < 0 && !this.game.gameOver) {
       this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
@@ -89,15 +92,21 @@ export class ToadSkin extends Enemy {
   public spriteHeight
   public width
   public height
+  public spriteY!: number
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('toads') as HTMLImageElement
-    this.spriteWidth = 140
-    this.spriteHeight = 260
+    this.image = document.getElementById('toad_sprite') as HTMLImageElement
+    this.spriteWidth = 154
+    this.spriteHeight = 238
     this.width = this.spriteWidth
     this.height = this.spriteHeight
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+  }
+
+  public update() {
+    super.update()
+    this.spriteY = this.collisionY - this.height * 0.5 - 90
   }
 }
 
@@ -108,14 +117,20 @@ export class BarkSkin extends Enemy {
   public spriteHeight
   public width
   public height
+  public spriteY!: number
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('bark') as HTMLImageElement
+    this.image = document.getElementById('bark_sprite') as HTMLImageElement
     this.spriteWidth = 183
     this.spriteHeight = 280
     this.width = this.spriteWidth
     this.height = this.spriteHeight
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+  }
+
+  public update() {
+    super.update()
+    this.spriteY = this.collisionY - this.height * 0.5 - 100
   }
 }
