@@ -164,6 +164,7 @@ export default class Game {
     window.addEventListener('keydown', (event) => {
       if (event.key === 'd') this.debug = !this.debug
       else if (event.key === 'r') this.restart()
+      else if (event.key === 'f') this.toggleFullScreen()
     })
   }
 
@@ -188,6 +189,11 @@ export default class Game {
     this.lostHatchings = 0
     this.gameOver = false
     this.init()
+  }
+
+  private toggleFullScreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+    else document.exitFullscreen()
   }
 
   public checkCollision(sprite1: Sprite, sprite2: Sprite) {
