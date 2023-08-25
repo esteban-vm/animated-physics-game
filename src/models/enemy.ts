@@ -1,15 +1,15 @@
 import type { Game, SpriteSheet } from '@/types'
 
-export default class Enemy implements SpriteSheet {
+export default abstract class Enemy implements SpriteSheet {
   public game
   public collisionRadius
-  public collisionX
+  public abstract collisionX: number
   public collisionY
-  public image
-  public spriteWidth
-  public spriteHeight
-  public width
-  public height
+  public abstract image: HTMLImageElement
+  public abstract spriteWidth: number
+  public abstract spriteHeight: number
+  public abstract width: number
+  public abstract height: number
   public spriteX!: number
   public spriteY!: number
   public frameX
@@ -19,14 +19,8 @@ export default class Enemy implements SpriteSheet {
   constructor(game: Game) {
     this.game = game
     this.collisionRadius = 30
-    this.image = document.getElementById('toads') as HTMLImageElement
-    this.spriteWidth = 140
-    this.spriteHeight = 260
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
-    this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
     this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
-    this.frameX = 0
+    this.frameX = Math.floor(Math.random() * 2)
     this.frameY = Math.floor(Math.random() * 4)
     this.speedX = Math.random() * 3 + 0.5
   }
@@ -85,5 +79,43 @@ export default class Enemy implements SpriteSheet {
         this.collisionY = sprite.collisionY + margin * unitY
       }
     })
+  }
+}
+
+export class ToadSkin extends Enemy {
+  public collisionX
+  public image
+  public spriteWidth
+  public spriteHeight
+  public width
+  public height
+
+  constructor(game: Game) {
+    super(game)
+    this.image = document.getElementById('toads') as HTMLImageElement
+    this.spriteWidth = 140
+    this.spriteHeight = 260
+    this.width = this.spriteWidth
+    this.height = this.spriteHeight
+    this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
+  }
+}
+
+export class BarkSkin extends Enemy {
+  public collisionX
+  public image
+  public spriteWidth
+  public spriteHeight
+  public width
+  public height
+
+  constructor(game: Game) {
+    super(game)
+    this.image = document.getElementById('bark') as HTMLImageElement
+    this.spriteWidth = 183
+    this.spriteHeight = 280
+    this.width = this.spriteWidth
+    this.height = this.spriteHeight
+    this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
   }
 }

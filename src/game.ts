@@ -1,5 +1,5 @@
-import type { GameObject, Larva, Particle, Sprite } from '@/types'
-import { Egg, Enemy, Player, Obstacle } from '@/models'
+import type { Enemy, GameObject, Larva, Particle, Sprite } from '@/types'
+import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
   public canvas
@@ -172,7 +172,8 @@ export default class Game {
   }
 
   private addEnemy() {
-    this.enemies.push(new Enemy(this))
+    if (Math.random() < 0.5) this.enemies.push(new ToadSkin(this))
+    else this.enemies.push(new BarkSkin(this))
   }
 
   private restart() {
