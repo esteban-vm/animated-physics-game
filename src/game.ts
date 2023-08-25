@@ -2,7 +2,7 @@ import type { Enemy, GameObject, Larva, Particle, Sprite } from '@/types'
 import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
-  public canvas
+  private canvas
   public width
   public height
   public player
@@ -24,6 +24,8 @@ export default class Game {
   public score
   public winningScore
   public gameOver
+  private background
+  private overlay
   private numberOfObstacles
   private numberOfEggs
 
@@ -50,6 +52,8 @@ export default class Game {
     this.score = 0
     this.winningScore = 30
     this.gameOver = false
+    this.background = document.getElementById('background') as HTMLImageElement
+    this.overlay = document.getElementById('overlay') as HTMLImageElement
     this.numberOfObstacles = 10
     this.numberOfEggs = 5
     this.init()
@@ -58,7 +62,8 @@ export default class Game {
 
   public render(context: CanvasRenderingContext2D, delta: number) {
     if (this.timer > this.interval) {
-      context.clearRect(0, 0, this.width, this.height)
+      // context.clearRect(0, 0, this.width, this.height)
+      context.drawImage(this.background, 0, 0)
       this.objects = [
         this.player,
         ...this.eggs,
@@ -72,6 +77,7 @@ export default class Game {
         sprite.create(context)
         sprite.update(delta)
       })
+      context.drawImage(this.overlay, 0, 0)
       this.timer = 0
     }
     this.timer += delta
@@ -107,7 +113,7 @@ export default class Game {
         message2 = 'You bullied the bullies'
       } else {
         message1 = 'Bullocks!'
-        message2 = `You lost ${this.hatchlings} hatchlings, don't be a pushover!`
+        message2 = `You lost ${this.lostHatchings} hatchlings, don't be a pushover!`
       }
       context.font = '130px Bangers'
       context.fillText(message1, x, y - 30)

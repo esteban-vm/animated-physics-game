@@ -7,16 +7,16 @@
 
 body {
   background-color: black;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 canvas {
-  background-image: url(/images/background.png);
   font-family: 'Bangers', cursive;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   user-select: none;
+  border: 5px solid green;
 }
 
 img {
