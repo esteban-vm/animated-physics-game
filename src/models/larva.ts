@@ -15,6 +15,7 @@ export default class Larva implements SpriteSheet {
   public spriteY!: number
   public frameX
   public frameY
+  private maxFrame
   private speedY
   public markedForDeletion
 
@@ -23,13 +24,14 @@ export default class Larva implements SpriteSheet {
     this.collisionRadius = 30
     this.collisionX = x
     this.collisionY = y
-    this.image = document.getElementById('larva') as HTMLImageElement
+    this.image = document.getElementById('larva_sprite') as HTMLImageElement
     this.spriteWidth = 150
     this.spriteHeight = 150
     this.width = this.spriteWidth
     this.height = this.spriteHeight
     this.frameX = 0
     this.frameY = Math.floor(Math.random() * 2)
+    this.maxFrame = 38
     this.speedY = 1 + Math.random()
     this.markedForDeletion = false
   }
@@ -76,6 +78,8 @@ export default class Larva implements SpriteSheet {
         this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, 'yellow'))
       }
     }
+    if (this.frameX < this.maxFrame) this.frameX++
+    else this.frameX = 0
     this.handleCollisions()
   }
 
