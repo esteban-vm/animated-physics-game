@@ -1,5 +1,4 @@
 import Game from '@/game'
-import resize from '@/resize'
 
 window.addEventListener('load', function () {
   const canvas = this.document.querySelector('canvas')!
@@ -24,7 +23,4 @@ window.addEventListener('load', function () {
   }
 
   animate(0)
-  resize(canvas)
-  this.focus()
-  this.addEventListener('resize', () => resize(canvas))
 })
