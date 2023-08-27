@@ -25,14 +25,14 @@ export default abstract class Particle implements GameObject {
     this.markedForDeletion = false
   }
 
-  public create(context: CanvasRenderingContext2D) {
-    context.save()
-    context.fillStyle = this.color
-    context.beginPath()
-    context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
-    context.fill()
-    context.stroke()
-    context.restore()
+  public create() {
+    this.game.context.save()
+    this.game.context.fillStyle = this.color
+    this.game.context.beginPath()
+    this.game.context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+    this.game.context.fill()
+    this.game.context.stroke()
+    this.game.context.restore()
   }
 
   public abstract update(): void

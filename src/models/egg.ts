@@ -28,19 +28,19 @@ export default class Egg implements Sprite {
     this.markedForDeletion = false
   }
 
-  public create(context: CanvasRenderingContext2D) {
-    context.drawImage(this.image, this.x, this.y)
-    if (this.game.debug) {
-      context.beginPath()
-      const { collisionRadius, collisionX, collisionY } = this
-      context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
-      context.save()
-      context.globalAlpha = 0.5
-      context.fill()
-      context.restore()
-      context.stroke()
-      const displayTimer = (this.hatchTimer * 0.001).toFixed(0)
-      context.fillText(displayTimer, collisionX, collisionY - collisionRadius * 2.5)
+  public create() {
+    const { game, image, x, y, collisionX, collisionY, collisionRadius, hatchTimer } = this
+    game.context.drawImage(image, x, y)
+    if (game.debug) {
+      game.context.beginPath()
+      game.context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
+      game.context.save()
+      game.context.globalAlpha = 0.5
+      game.context.fill()
+      game.context.restore()
+      game.context.stroke()
+      const displayTimer = (hatchTimer * 0.001).toFixed(0)
+      game.context.fillText(displayTimer, collisionX, collisionY - collisionRadius * 2.5)
     }
   }
 

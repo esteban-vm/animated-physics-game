@@ -25,19 +25,19 @@ export default abstract class Enemy implements SpriteSheet {
     this.speedX = Math.random() * 3 + 0.5
   }
 
-  public create(context: CanvasRenderingContext2D) {
+  public create() {
     const { game, image, x, y, frameX, frameY, collisionX, collisionY, collisionRadius, width, height } = this
     const sourceX = frameX * width
     const sourceY = frameY * height
-    context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
+    game.context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
     if (game.debug) {
-      context.beginPath()
-      context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
-      context.save()
-      context.globalAlpha = 0.5
-      context.fill()
-      context.restore()
-      context.stroke()
+      game.context.beginPath()
+      game.context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
+      game.context.save()
+      game.context.globalAlpha = 0.5
+      game.context.fill()
+      game.context.restore()
+      game.context.stroke()
     }
   }
 

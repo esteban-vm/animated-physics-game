@@ -27,19 +27,19 @@ export default class Obstacle implements SpriteSheet {
     this.frameY = Math.floor(Math.random() * 3)
   }
 
-  public create(context: CanvasRenderingContext2D) {
+  public create() {
     const { game, image, x, y, frameX, frameY, width, height } = this
     const sourceX = frameX * width
     const sourceY = frameY * height
-    context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
+    game.context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
     if (game.debug) {
-      context.beginPath()
-      context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
-      context.save()
-      context.globalAlpha = 0.5
-      context.fill()
-      context.restore()
-      context.stroke()
+      game.context.beginPath()
+      game.context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2)
+      game.context.save()
+      game.context.globalAlpha = 0.5
+      game.context.fill()
+      game.context.restore()
+      game.context.stroke()
     }
   }
 

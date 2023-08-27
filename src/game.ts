@@ -3,6 +3,7 @@ import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
   private canvas
+  public context
   public width
   public height
   public player
@@ -32,6 +33,7 @@ export default class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
+    this.context = this.canvas.getContext('2d')!
     this.width = this.canvas.width
     this.height = this.canvas.height
     this.player = new Player(this)
@@ -49,8 +51,69 @@ export default class Game {
     this.numberOfEggs = 5
     this.numberOfEnemies = 5
     this.objects = []
+    this.setStyles()
     this.init()
     this.setListeners()
+  }
+
+  public render(delta: number) {
+    const { context } = this
+    if (this.timer > this.interval) {
+      // context.clearRect(0, 0, this.width, this.height)
+      context.drawImage(this.background, 0, 0)
+      this.objects = [
+        this.player,
+        ...this.eggs,
+        ...this.obstacles,
+        ...this.enemies,
+        ...this.hatchlings,
+        ...this.particles,
+      ]
+      this.objects.sort((a, b) => a.collisionY - b.collisionY)
+      this.objects.forEach((sprite) => {
+        sprite.create()
+        sprite.update(delta)
+      })
+      context.drawImage(this.overlay, 0, 0)
+      this.timer = 0
+    }
+    this.timer += delta
+    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs && !this.gameOver) {
+      this.addEgg()
+      this.eggTimer = 0
+    } else {
+      this.eggTimer += delta
+    }
+    context.save()
+    context.textAlign = 'left'
+    context.fillText(`Score: ${this.score}`, 25, 50)
+    if (this.debug) {
+      context.fillText(`Lost: ${this.lostHatchings}`, 25, 100)
+    }
+    context.restore()
+    this.displayMessage()
+  }
+
+  public removeObjects() {
+    this.eggs = this.eggs.filter((egg) => !egg.markedForDeletion)
+    this.hatchlings = this.hatchlings.filter((hatchling) => !hatchling.markedForDeletion)
+    this.particles = this.particles.filter((particle) => !particle.markedForDeletion)
+  }
+
+  public checkCollision(object1: GameObject, object2: GameObject) {
+    const distanceX = object1.collisionX - object2.collisionX
+    const distanceY = object1.collisionY - object2.collisionY
+    const distance = Math.hypot(distanceY, distanceX)
+    const sumOfRadii = object1.collisionRadius + object2.collisionRadius
+    return { collides: distance < sumOfRadii, d: distance, sum: sumOfRadii, dx: distanceX, dy: distanceY }
+  }
+
+  private setStyles() {
+    this.context.fillStyle = 'aliceblue'
+    this.context.strokeStyle = 'black'
+    this.context.lineWidth = 3
+    this.context.font = '40px Bangers'
+    this.context.textAlign = 'center'
   }
 
   private init() {
@@ -112,43 +175,6 @@ export default class Game {
     })
   }
 
-  public render(context: CanvasRenderingContext2D, delta: number) {
-    if (this.timer > this.interval) {
-      // context.clearRect(0, 0, this.width, this.height)
-      context.drawImage(this.background, 0, 0)
-      this.objects = [
-        this.player,
-        ...this.eggs,
-        ...this.obstacles,
-        ...this.enemies,
-        ...this.hatchlings,
-        ...this.particles,
-      ]
-      this.objects.sort((a, b) => a.collisionY - b.collisionY)
-      this.objects.forEach((sprite) => {
-        sprite.create(context)
-        sprite.update(delta)
-      })
-      context.drawImage(this.overlay, 0, 0)
-      this.timer = 0
-    }
-    this.timer += delta
-    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs && !this.gameOver) {
-      this.addEgg()
-      this.eggTimer = 0
-    } else {
-      this.eggTimer += delta
-    }
-    context.save()
-    context.textAlign = 'left'
-    context.fillText(`Score: ${this.score}`, 25, 50)
-    if (this.debug) {
-      context.fillText(`Lost: ${this.lostHatchings}`, 25, 100)
-    }
-    context.restore()
-    this.displayMessage(context)
-  }
-
   private addEgg() {
     this.eggs.push(new Egg(this))
   }
@@ -168,22 +194,9 @@ export default class Game {
     else document.exitFullscreen()
   }
 
-  public checkCollision(object1: GameObject, object2: GameObject) {
-    const distanceX = object1.collisionX - object2.collisionX
-    const distanceY = object1.collisionY - object2.collisionY
-    const distance = Math.hypot(distanceY, distanceX)
-    const sumOfRadii = object1.collisionRadius + object2.collisionRadius
-    return { collides: distance < sumOfRadii, d: distance, sum: sumOfRadii, dx: distanceX, dy: distanceY }
-  }
-
-  public removeObjects() {
-    this.eggs = this.eggs.filter((egg) => !egg.markedForDeletion)
-    this.hatchlings = this.hatchlings.filter((hatchling) => !hatchling.markedForDeletion)
-    this.particles = this.particles.filter((particle) => !particle.markedForDeletion)
-  }
-
-  private displayMessage(context: CanvasRenderingContext2D) {
+  private displayMessage() {
     if (this.score >= this.winningScore) {
+      const { context } = this
       this.gameOver = true
       context.save()
       context.fillStyle = 'rgba(0, 0, 0, 0.5)'

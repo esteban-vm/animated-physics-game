@@ -5,7 +5,7 @@ export interface GameObject {
   collisionX: number
   collisionY: number
   collisionRadius: number
-  create(context: CanvasRenderingContext2D): void
+  create(): void
   update(delta: number): void
 }
 
