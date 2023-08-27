@@ -1,4 +1,4 @@
-import type { Enemy, GameObject, Larva, Particle, Sprite } from '@/types'
+import type { Enemy, GameObject, Larva, Particle } from '@/types'
 import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
@@ -202,11 +202,11 @@ export default class Game {
     else document.exitFullscreen()
   }
 
-  public checkCollision(sprite1: Sprite, sprite2: Sprite) {
-    const distanceX = sprite1.collisionX - sprite2.collisionX
-    const distanceY = sprite1.collisionY - sprite2.collisionY
+  public checkCollision(obj1: GameObject, obj2: GameObject) {
+    const distanceX = obj1.collisionX - obj2.collisionX
+    const distanceY = obj1.collisionY - obj2.collisionY
     const distance = Math.hypot(distanceY, distanceX)
-    const sumOfRadii = sprite1.collisionRadius + sprite2.collisionRadius
+    const sumOfRadii = obj1.collisionRadius + obj2.collisionRadius
     return { collides: distance < sumOfRadii, d: distance, sum: sumOfRadii, dx: distanceX, dy: distanceY }
   }
 
