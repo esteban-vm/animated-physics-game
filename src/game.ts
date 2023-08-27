@@ -137,7 +137,7 @@ export default class Game {
         const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + 150
         if (distance < sumOfRadii) overlap = true
       })
-      const { spriteX: sx, width: ow, collisionY: cy, collisionRadius: cr } = testObstacle
+      const { x: sx, width: ow, collisionY: cy, collisionRadius: cr } = testObstacle
       const { width: gw, height: gh, topMargin: tm } = this
       const margin = cr * 3
       if (!overlap && sx > 0 && sx < gw - ow && cy > margin + tm && cy < gh - margin) {
@@ -170,7 +170,7 @@ export default class Game {
     window.addEventListener('keydown', (event) => {
       if (event.key === 'd') this.debug = !this.debug
       else if (event.key === 'r') this.restart()
-      else if (event.key === 'f') this.toggleFullScreen()
+      else if (event.key === 'f') this.toggleFullscreen()
     })
   }
 
@@ -197,7 +197,7 @@ export default class Game {
     this.init()
   }
 
-  private toggleFullScreen() {
+  private toggleFullscreen() {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen()
     else document.exitFullscreen()
   }

@@ -2,16 +2,14 @@ import type { Game, SpriteSheet } from '@/types'
 
 export default abstract class Enemy implements SpriteSheet {
   public game
-  public collisionRadius
   public abstract collisionX: number
   public collisionY
+  public collisionRadius
   public abstract image: HTMLImageElement
-  public abstract spriteWidth: number
-  public abstract spriteHeight: number
   public abstract width: number
   public abstract height: number
-  public spriteX!: number
-  public abstract spriteY: number
+  public x!: number
+  public abstract y: number
   public frameX
   public frameY
   private maxFrame
@@ -19,8 +17,8 @@ export default abstract class Enemy implements SpriteSheet {
 
   constructor(game: Game) {
     this.game = game
-    this.collisionRadius = 30
     this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
+    this.collisionRadius = 30
     this.frameX = 0
     this.frameY = Math.floor(Math.random() * 4)
     this.maxFrame = 38
@@ -28,24 +26,10 @@ export default abstract class Enemy implements SpriteSheet {
   }
 
   public create(context: CanvasRenderingContext2D) {
-    const {
-      game,
-      image,
-      spriteWidth,
-      spriteHeight,
-      spriteX,
-      spriteY,
-      frameX,
-      frameY,
-      collisionX,
-      collisionY,
-      collisionRadius,
-      width,
-      height,
-    } = this
-    const sourceX = frameX * spriteWidth
-    const sourceY = frameY * spriteHeight
-    context.drawImage(image, sourceX, sourceY, spriteWidth, spriteHeight, spriteX, spriteY, width, height)
+    const { game, image, x, y, frameX, frameY, collisionX, collisionY, collisionRadius, width, height } = this
+    const sourceX = frameX * width
+    const sourceY = frameY * height
+    context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
     if (game.debug) {
       context.beginPath()
       context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
@@ -60,9 +44,9 @@ export default abstract class Enemy implements SpriteSheet {
   public update() {
     if (this.frameX < this.maxFrame) this.frameX++
     else this.frameX = 0
-    this.spriteX = this.collisionX - this.width * 0.5
+    this.x = this.collisionX - this.width * 0.5
     this.collisionX -= this.speedX
-    if (this.spriteX + this.width < 0 && !this.game.gameOver) {
+    if (this.x + this.width < 0 && !this.game.gameOver) {
       this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
       this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
       this.frameY = Math.floor(Math.random() * 4)
@@ -88,49 +72,41 @@ export default abstract class Enemy implements SpriteSheet {
 export class ToadSkin extends Enemy {
   public collisionX
   public image
-  public spriteWidth
-  public spriteHeight
   public width
   public height
-  public spriteY!: number
+  public y!: number
 
   constructor(game: Game) {
     super(game)
     this.image = document.getElementById('toad') as HTMLImageElement
-    this.spriteWidth = 154
-    this.spriteHeight = 238
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
+    this.width = 154
+    this.height = 238
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
   }
 
   public update() {
     super.update()
-    this.spriteY = this.collisionY - this.height * 0.5 - 90
+    this.y = this.collisionY - this.height * 0.5 - 90
   }
 }
 
 export class BarkSkin extends Enemy {
   public collisionX
   public image
-  public spriteWidth
-  public spriteHeight
   public width
   public height
-  public spriteY!: number
+  public y!: number
 
   constructor(game: Game) {
     super(game)
     this.image = document.getElementById('bark') as HTMLImageElement
-    this.spriteWidth = 183
-    this.spriteHeight = 280
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
+    this.width = 183
+    this.height = 280
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
   }
 
   public update() {
     super.update()
-    this.spriteY = this.collisionY - this.height * 0.5 - 100
+    this.y = this.collisionY - this.height * 0.5 - 100
   }
 }

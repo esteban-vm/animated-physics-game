@@ -3,16 +3,14 @@ import { Firefly, Spark } from '@/particle'
 
 export default class Larva implements SpriteSheet {
   public game
-  public collisionRadius
   public collisionX
   public collisionY
+  public collisionRadius
   public image
-  public spriteWidth
-  public spriteHeight
   public width
   public height
-  public spriteX!: number
-  public spriteY!: number
+  public x!: number
+  public y!: number
   public frameX
   public frameY
   private maxFrame
@@ -21,14 +19,12 @@ export default class Larva implements SpriteSheet {
 
   constructor(game: Game, x: number, y: number) {
     this.game = game
-    this.collisionRadius = 30
     this.collisionX = x
     this.collisionY = y
+    this.collisionRadius = 30
     this.image = document.getElementById('larva') as HTMLImageElement
-    this.spriteWidth = 150
-    this.spriteHeight = 150
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
+    this.width = 150
+    this.height = 150
     this.frameX = 0
     this.frameY = Math.floor(Math.random() * 2)
     this.maxFrame = 38
@@ -37,24 +33,10 @@ export default class Larva implements SpriteSheet {
   }
 
   public create(context: CanvasRenderingContext2D) {
-    const {
-      game,
-      image,
-      spriteWidth,
-      spriteHeight,
-      spriteX,
-      spriteY,
-      frameX,
-      frameY,
-      collisionX,
-      collisionY,
-      collisionRadius,
-      width,
-      height,
-    } = this
-    const sourceX = frameX * spriteWidth
-    const sourceY = frameY * spriteHeight
-    context.drawImage(image, sourceX, sourceY, spriteWidth, spriteHeight, spriteX, spriteY, width, height)
+    const { game, image, x, y, frameX, frameY, collisionX, collisionY, collisionRadius, width, height } = this
+    const sourceX = frameX * width
+    const sourceY = frameY * height
+    context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
     if (game.debug) {
       context.beginPath()
       context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
@@ -68,8 +50,8 @@ export default class Larva implements SpriteSheet {
 
   public update() {
     this.collisionY -= this.speedY
-    this.spriteX = this.collisionX - this.width * 0.5
-    this.spriteY = this.collisionY - this.height * 0.5 - 40
+    this.x = this.collisionX - this.width * 0.5
+    this.y = this.collisionY - this.height * 0.5 - 40
     if (this.collisionY < this.game.topMargin) {
       this.markedForDeletion = true
       this.game.removeObjects()

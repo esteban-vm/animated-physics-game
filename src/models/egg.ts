@@ -3,38 +3,33 @@ import Larva from '@/larva'
 
 export default class Egg implements Sprite {
   public game
-  public collisionRadius
   public collisionX
   public collisionY
+  public collisionRadius
   public image
-  public spriteWidth
-  public spriteHeight
   public width
   public height
-  public spriteX!: number
-  public spriteY!: number
+  public x!: number
+  public y!: number
   private hatchTimer
   private hatchInterval
   public markedForDeletion
 
   constructor(game: Game) {
     this.game = game
+    this.collisionX = 80 + Math.random() * (this.game.width - 160)
+    this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin - 80)
     this.collisionRadius = 40
-    const margin = this.collisionRadius * 2
-    this.collisionX = margin + Math.random() * (this.game.width - margin * 2)
-    this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin - margin)
     this.image = document.getElementById('egg') as HTMLImageElement
-    this.spriteWidth = 110
-    this.spriteHeight = 135
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
+    this.width = 110
+    this.height = 135
     this.hatchTimer = 0
     this.hatchInterval = 10_000
     this.markedForDeletion = false
   }
 
   public create(context: CanvasRenderingContext2D) {
-    context.drawImage(this.image, this.spriteX, this.spriteY)
+    context.drawImage(this.image, this.x, this.y)
     if (this.game.debug) {
       context.beginPath()
       const { collisionRadius, collisionX, collisionY } = this
@@ -50,8 +45,8 @@ export default class Egg implements Sprite {
   }
 
   public update(delta: number) {
-    this.spriteX = this.collisionX - this.width * 0.5
-    this.spriteY = this.collisionY - this.height * 0.5 - 30
+    this.x = this.collisionX - this.width * 0.5
+    this.y = this.collisionY - this.height * 0.5 - 30
     this.handleCollisions()
     this.handleHatching(delta)
   }

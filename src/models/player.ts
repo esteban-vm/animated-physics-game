@@ -2,16 +2,14 @@ import type { Game, SpriteSheet } from '@/types'
 
 export default class Player implements SpriteSheet {
   public game
-  public collisionRadius
   public collisionX
   public collisionY
+  public collisionRadius
   public image
-  public spriteWidth
-  public spriteHeight
   public width
   public height
-  public spriteX!: number
-  public spriteY!: number
+  public x!: number
+  public y!: number
   public frameX
   public frameY
   private maxFrame
@@ -23,14 +21,12 @@ export default class Player implements SpriteSheet {
 
   constructor(game: Game) {
     this.game = game
-    this.collisionRadius = 30
     this.collisionX = this.game.width * 0.5
     this.collisionY = this.game.height * 0.5
+    this.collisionRadius = 30
     this.image = document.getElementById('bull') as HTMLImageElement
-    this.spriteWidth = 255
-    this.spriteHeight = 256
-    this.width = this.spriteWidth
-    this.height = this.spriteHeight
+    this.width = 255
+    this.height = 256
     this.frameX = 0
     this.frameY = 5
     this.maxFrame = 58
@@ -42,24 +38,10 @@ export default class Player implements SpriteSheet {
   }
 
   public create(context: CanvasRenderingContext2D) {
-    const {
-      game,
-      image,
-      spriteWidth,
-      spriteHeight,
-      spriteX,
-      spriteY,
-      frameX,
-      frameY,
-      collisionX,
-      collisionY,
-      collisionRadius,
-      width,
-      height,
-    } = this
-    const sourceX = frameX * spriteWidth
-    const sourceY = frameY * spriteHeight
-    context.drawImage(image, sourceX, sourceY, spriteWidth, spriteHeight, spriteX, spriteY, width, height)
+    const { game, image, x, y, frameX, frameY, collisionX, collisionY, collisionRadius, width, height } = this
+    const sourceX = frameX * width
+    const sourceY = frameY * height
+    context.drawImage(image, sourceX, sourceY, width, height, x, y, width, height)
     if (game.debug) {
       context.beginPath()
       context.arc(collisionX, collisionY, collisionRadius, 0, Math.PI * 2)
@@ -89,8 +71,8 @@ export default class Player implements SpriteSheet {
     }
     this.collisionX += this.speedX * this.speedModifier
     this.collisionY += this.speedY * this.speedModifier
-    this.spriteX = this.collisionX - this.width * 0.5
-    this.spriteY = this.collisionY - this.height * 0.5 - 100
+    this.x = this.collisionX - this.width * 0.5
+    this.y = this.collisionY - this.height * 0.5 - 100
     this.setBoundaries()
     this.game.obstacles.forEach((obstacle) => {
       const { collides, d, sum, dx, dy } = this.game.checkCollision(this, obstacle)
@@ -107,8 +89,8 @@ export default class Player implements SpriteSheet {
   public restart() {
     this.collisionX = this.game.width * 0.5
     this.collisionY = this.game.height * 0.5
-    this.spriteX = this.collisionX - this.width * 0.5
-    this.spriteY = this.collisionY - this.height * 0.5 - 100
+    this.x = this.collisionX - this.width * 0.5
+    this.y = this.collisionY - this.height * 0.5 - 100
   }
 
   private rotate() {
