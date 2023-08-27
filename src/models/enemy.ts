@@ -55,15 +55,15 @@ export default abstract class Enemy implements SpriteSheet {
   }
 
   private handleCollisions() {
-    const collisionSprites = [this.game.player, ...this.game.obstacles]
-    collisionSprites.forEach((sprite) => {
-      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, sprite)
+    const objects = [this.game.player, ...this.game.obstacles]
+    objects.forEach((object) => {
+      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, object)
       if (collides) {
         const unitX = dx / d
         const unitY = dy / d
         const margin = sum + 1
-        this.collisionX = sprite.collisionX + margin * unitX
-        this.collisionY = sprite.collisionY + margin * unitY
+        this.collisionX = object.collisionX + margin * unitX
+        this.collisionY = object.collisionY + margin * unitY
       }
     })
   }

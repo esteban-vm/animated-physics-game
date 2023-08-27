@@ -44,23 +44,24 @@ export default class Egg implements Sprite {
     }
   }
 
-  public update(delta: number) {
+  public update(...args: [delta: number]) {
     this.x = this.collisionX - this.width * 0.5
     this.y = this.collisionY - this.height * 0.5 - 30
     this.handleCollisions()
-    this.handleHatching(delta)
+    this.handleHatching(...args)
   }
 
   private handleCollisions() {
-    const collisionSprites = [this.game.player, ...this.game.obstacles, ...this.game.enemies, ...this.game.hatchlings]
-    collisionSprites.forEach((sprite) => {
-      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, sprite)
-      if (collides && !this.game.gameOver) {
+    const { player, obstacles, enemies, hatchlings, gameOver } = this.game
+    const objects = [player, ...obstacles, ...enemies, ...hatchlings]
+    objects.forEach((object) => {
+      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, object)
+      if (collides && !gameOver) {
         const unitX = dx / d
         const unitY = dy / d
         const margin = sum + 1
-        this.collisionX = sprite.collisionX + margin * unitX
-        this.collisionY = sprite.collisionY + margin * unitY
+        this.collisionX = object.collisionX + margin * unitX
+        this.collisionY = object.collisionY + margin * unitY
       }
     })
   }

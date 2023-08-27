@@ -6,14 +6,6 @@ export default class Game {
   public width
   public height
   public player
-  public pointer
-  public objects: GameObject[]
-  public obstacles: Obstacle[]
-  public eggs: Egg[]
-  public enemies: Enemy[]
-  public hatchlings: Larva[]
-  public particles: Particle[]
-  public lostHatchings
   public debug
   public topMargin
   public fps
@@ -21,27 +13,28 @@ export default class Game {
   public eggTimer
   public interval
   public eggInterval
-  public score
   public winningScore
-  public gameOver
+  public objects: GameObject[]
+  public obstacles!: Obstacle[]
+  public eggs!: Egg[]
+  public enemies!: Enemy[]
+  public hatchlings!: Larva[]
+  public particles!: Particle[]
+  public pointer!: { x: number; y: number; pressed: boolean }
+  public score!: number
+  public lostHatchings!: number
+  public gameOver!: boolean
   private background
   private overlay
   private numberOfObstacles
   private numberOfEggs
+  private numberOfEnemies
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
     this.width = this.canvas.width
     this.height = this.canvas.height
     this.player = new Player(this)
-    this.pointer = { x: this.player.collisionX, y: this.player.collisionY, pressed: false }
-    this.objects = []
-    this.obstacles = []
-    this.eggs = []
-    this.enemies = []
-    this.hatchlings = []
-    this.particles = []
-    this.lostHatchings = 0
     this.debug = import.meta.env.DEV
     this.topMargin = 260
     this.fps = 70
@@ -49,15 +42,74 @@ export default class Game {
     this.eggTimer = 0
     this.interval = 1_000 / this.fps
     this.eggInterval = 500
-    this.score = 0
     this.winningScore = 30
-    this.gameOver = false
     this.background = document.getElementById('background') as HTMLImageElement
     this.overlay = document.getElementById('overlay') as HTMLImageElement
     this.numberOfObstacles = 10
     this.numberOfEggs = 5
+    this.numberOfEnemies = 5
+    this.objects = []
     this.init()
-    this.addListeners()
+    this.setListeners()
+  }
+
+  private init() {
+    this.obstacles = []
+    this.eggs = []
+    this.enemies = []
+    this.hatchlings = []
+    this.particles = []
+    this.pointer = { x: this.player.collisionX, y: this.player.collisionY, pressed: false }
+    this.score = 0
+    this.lostHatchings = 0
+    this.gameOver = false
+    for (let index = 1; index <= this.numberOfEnemies; index++) this.addEnemy()
+    let attempts = 0
+    while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
+      const testObstacle = new Obstacle(this)
+      let overlap = false
+      this.obstacles.forEach((obstacle) => {
+        const distanceX = testObstacle.collisionX - obstacle.collisionX
+        const distanceY = testObstacle.collisionY - obstacle.collisionY
+        const distance = Math.hypot(distanceY, distanceX)
+        const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + 150
+        if (distance < sumOfRadii) overlap = true
+      })
+      const { x: sx, width: ow, collisionY: cy, collisionRadius: cr } = testObstacle
+      const { width: gw, height: gh, topMargin: tm } = this
+      const margin = cr * 3
+      if (!overlap && sx > 0 && sx < gw - ow && cy > margin + tm && cy < gh - margin) {
+        this.obstacles.push(testObstacle)
+      }
+      attempts++
+    }
+  }
+
+  private setListeners() {
+    this.canvas.addEventListener('pointerdown', (event) => {
+      this.pointer.x = event.offsetX
+      this.pointer.y = event.offsetY
+      this.pointer.pressed = true
+    })
+
+    this.canvas.addEventListener('pointerup', (event) => {
+      this.pointer.x = event.offsetX
+      this.pointer.y = event.offsetY
+      this.pointer.pressed = false
+    })
+
+    this.canvas.addEventListener('pointermove', (event) => {
+      if (this.pointer.pressed) {
+        this.pointer.x = event.offsetX
+        this.pointer.y = event.offsetY
+      }
+    })
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'd') this.debug = !this.debug
+      else if (event.key === 'r') this.restart()
+      else if (event.key === 'f') this.toggleFullscreen()
+    })
   }
 
   public render(context: CanvasRenderingContext2D, delta: number) {
@@ -94,6 +146,43 @@ export default class Game {
       context.fillText(`Lost: ${this.lostHatchings}`, 25, 100)
     }
     context.restore()
+    this.displayMessage(context)
+  }
+
+  private addEgg() {
+    this.eggs.push(new Egg(this))
+  }
+
+  private addEnemy() {
+    if (Math.random() < 0.5) this.enemies.push(new ToadSkin(this))
+    else this.enemies.push(new BarkSkin(this))
+  }
+
+  private restart() {
+    this.player.restart()
+    this.init()
+  }
+
+  private toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+    else document.exitFullscreen()
+  }
+
+  public checkCollision(object1: GameObject, object2: GameObject) {
+    const distanceX = object1.collisionX - object2.collisionX
+    const distanceY = object1.collisionY - object2.collisionY
+    const distance = Math.hypot(distanceY, distanceX)
+    const sumOfRadii = object1.collisionRadius + object2.collisionRadius
+    return { collides: distance < sumOfRadii, d: distance, sum: sumOfRadii, dx: distanceX, dy: distanceY }
+  }
+
+  public removeObjects() {
+    this.eggs = this.eggs.filter((egg) => !egg.markedForDeletion)
+    this.hatchlings = this.hatchlings.filter((hatchling) => !hatchling.markedForDeletion)
+    this.particles = this.particles.filter((particle) => !particle.markedForDeletion)
+  }
+
+  private displayMessage(context: CanvasRenderingContext2D) {
     if (this.score >= this.winningScore) {
       this.gameOver = true
       context.save()
@@ -122,97 +211,5 @@ export default class Game {
       context.fillText(`Final score: ${this.score}. Press "R" to butt heads again!`, x, y + 80)
       context.restore()
     }
-  }
-
-  private init() {
-    for (let index = 1; index <= 5; index++) this.addEnemy()
-    let attempts = 0
-    while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
-      const testObstacle = new Obstacle(this)
-      let overlap = false
-      this.obstacles.forEach((obstacle) => {
-        const distanceX = testObstacle.collisionX - obstacle.collisionX
-        const distanceY = testObstacle.collisionY - obstacle.collisionY
-        const distance = Math.hypot(distanceY, distanceX)
-        const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + 150
-        if (distance < sumOfRadii) overlap = true
-      })
-      const { x: sx, width: ow, collisionY: cy, collisionRadius: cr } = testObstacle
-      const { width: gw, height: gh, topMargin: tm } = this
-      const margin = cr * 3
-      if (!overlap && sx > 0 && sx < gw - ow && cy > margin + tm && cy < gh - margin) {
-        this.obstacles.push(testObstacle)
-      }
-      attempts++
-    }
-  }
-
-  private addListeners() {
-    this.canvas.addEventListener('pointerdown', (event) => {
-      this.pointer.x = event.offsetX
-      this.pointer.y = event.offsetY
-      this.pointer.pressed = true
-    })
-
-    this.canvas.addEventListener('pointerup', (event) => {
-      this.pointer.x = event.offsetX
-      this.pointer.y = event.offsetY
-      this.pointer.pressed = false
-    })
-
-    this.canvas.addEventListener('pointermove', (event) => {
-      if (this.pointer.pressed) {
-        this.pointer.x = event.offsetX
-        this.pointer.y = event.offsetY
-      }
-    })
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'd') this.debug = !this.debug
-      else if (event.key === 'r') this.restart()
-      else if (event.key === 'f') this.toggleFullscreen()
-    })
-  }
-
-  private addEgg() {
-    this.eggs.push(new Egg(this))
-  }
-
-  private addEnemy() {
-    if (Math.random() < 0.5) this.enemies.push(new ToadSkin(this))
-    else this.enemies.push(new BarkSkin(this))
-  }
-
-  private restart() {
-    this.player.restart()
-    this.obstacles = []
-    this.eggs = []
-    this.enemies = []
-    this.hatchlings = []
-    this.particles = []
-    this.pointer = { x: this.player.collisionX, y: this.player.collisionY, pressed: false }
-    this.score = 0
-    this.lostHatchings = 0
-    this.gameOver = false
-    this.init()
-  }
-
-  private toggleFullscreen() {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen()
-    else document.exitFullscreen()
-  }
-
-  public checkCollision(obj1: GameObject, obj2: GameObject) {
-    const distanceX = obj1.collisionX - obj2.collisionX
-    const distanceY = obj1.collisionY - obj2.collisionY
-    const distance = Math.hypot(distanceY, distanceX)
-    const sumOfRadii = obj1.collisionRadius + obj2.collisionRadius
-    return { collides: distance < sumOfRadii, d: distance, sum: sumOfRadii, dx: distanceX, dy: distanceY }
-  }
-
-  public removeObjects() {
-    this.eggs = this.eggs.filter((egg) => !egg.markedForDeletion)
-    this.hatchlings = this.hatchlings.filter((hatchling) => !hatchling.markedForDeletion)
-    this.particles = this.particles.filter((particle) => !particle.markedForDeletion)
   }
 }

@@ -74,16 +74,7 @@ export default class Player implements SpriteSheet {
     this.x = this.collisionX - this.width * 0.5
     this.y = this.collisionY - this.height * 0.5 - 100
     this.setBoundaries()
-    this.game.obstacles.forEach((obstacle) => {
-      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, obstacle)
-      if (collides) {
-        const unitX = dx / d
-        const unitY = dy / d
-        const margin = sum + 1
-        this.collisionX = obstacle.collisionX + margin * unitX
-        this.collisionY = obstacle.collisionY + margin * unitY
-      }
-    })
+    this.handleCollisions()
   }
 
   public restart() {
@@ -113,5 +104,18 @@ export default class Player implements SpriteSheet {
     else if (collisionX > game.width - collisionRadius) this.collisionX = game.width - collisionRadius
     if (collisionY < game.topMargin + collisionRadius) this.collisionY = game.topMargin + collisionRadius
     else if (collisionY > game.height - collisionRadius) this.collisionY = game.height - collisionRadius
+  }
+
+  private handleCollisions() {
+    this.game.obstacles.forEach((obstacle) => {
+      const { collides, d, sum, dx, dy } = this.game.checkCollision(this, obstacle)
+      if (collides) {
+        const unitX = dx / d
+        const unitY = dy / d
+        const margin = sum + 1
+        this.collisionX = obstacle.collisionX + margin * unitX
+        this.collisionY = obstacle.collisionY + margin * unitY
+      }
+    })
   }
 }
