@@ -55,8 +55,8 @@ export default class Larva implements SpriteSheet {
     if (this.collisionY < this.game.topMargin) {
       this.markedForDeletion = true
       this.game.removeObjects()
-      if (!this.game.gameOver) this.game.score++
-      for (let index = 1; index <= 3; index++) {
+      if (!this.game.isOver) this.game.score++
+      for (let particle = 1; particle <= 3; particle++) {
         this.game.particles.push(new Firefly(this.game, this.collisionX, this.collisionY, 'yellow'))
       }
     }
@@ -83,7 +83,7 @@ export default class Larva implements SpriteSheet {
         this.markedForDeletion = true
         this.game.removeObjects()
         this.game.lostHatchings++
-        for (let index = 1; index <= 5; index++) {
+        for (let particle = 1; particle <= 5; particle++) {
           this.game.particles.push(new Spark(this.game, this.collisionX, this.collisionY, 'blue'))
         }
       }

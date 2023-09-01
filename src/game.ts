@@ -24,7 +24,7 @@ export default class Game {
   public pointer!: { x: number; y: number; pressed: boolean }
   public score!: number
   public lostHatchings!: number
-  public gameOver!: boolean
+  public isOver!: boolean
   private background
   private overlay
   private numberOfObstacles
@@ -51,24 +51,18 @@ export default class Game {
     this.numberOfEggs = 5
     this.numberOfEnemies = 5
     this.objects = []
-    this.setStyles()
     this.init()
+    this.setStyles()
     this.setListeners()
   }
 
   public render(delta: number) {
     const { context } = this
     if (this.timer > this.interval) {
-      // context.clearRect(0, 0, this.width, this.height)
+      context.clearRect(0, 0, this.width, this.height)
       context.drawImage(this.background, 0, 0)
-      this.objects = [
-        this.player,
-        ...this.eggs,
-        ...this.obstacles,
-        ...this.enemies,
-        ...this.hatchlings,
-        ...this.particles,
-      ]
+      const { player, eggs, obstacles, enemies, hatchlings, particles } = this
+      this.objects = [player, ...eggs, ...obstacles, ...enemies, ...hatchlings, ...particles]
       this.objects.sort((a, b) => a.collisionY - b.collisionY)
       this.objects.forEach((sprite) => {
         sprite.create()
@@ -78,7 +72,7 @@ export default class Game {
       this.timer = 0
     }
     this.timer += delta
-    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs && !this.gameOver) {
+    if (this.eggTimer > this.eggInterval && this.eggs.length < this.numberOfEggs && !this.isOver) {
       this.addEgg()
       this.eggTimer = 0
     } else {
@@ -125,8 +119,8 @@ export default class Game {
     this.pointer = { x: this.player.collisionX, y: this.player.collisionY, pressed: false }
     this.score = 0
     this.lostHatchings = 0
-    this.gameOver = false
-    for (let index = 1; index <= this.numberOfEnemies; index++) this.addEnemy()
+    this.isOver = false
+    for (let enemy = 1; enemy <= this.numberOfEnemies; enemy++) this.addEnemy()
     let attempts = 0
     while (this.obstacles.length < this.numberOfObstacles && attempts < 500) {
       const testObstacle = new Obstacle(this)
@@ -197,7 +191,7 @@ export default class Game {
   private displayMessage() {
     if (this.score >= this.winningScore) {
       const { context } = this
-      this.gameOver = true
+      this.isOver = true
       context.save()
       context.fillStyle = 'rgba(0, 0, 0, 0.5)'
       context.fillRect(0, 0, this.width, this.height)
@@ -208,15 +202,15 @@ export default class Game {
       context.shadowColor = 'black'
       let message1: string
       let message2: string
-      const x = this.width * 0.5
-      const y = this.height * 0.5
       if (this.lostHatchings <= 5) {
         message1 = 'Bullseye!!!'
         message2 = 'You bullied the bullies'
       } else {
-        message1 = 'Bullocks!'
+        message1 = 'Bullocks!!!'
         message2 = `You lost ${this.lostHatchings} hatchlings, don't be a pushover!`
       }
+      const x = this.width * 0.5
+      const y = this.height * 0.5
       context.font = '130px Bangers'
       context.fillText(message1, x, y - 30)
       context.font = '40px Bangers'

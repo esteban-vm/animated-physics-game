@@ -17,7 +17,8 @@ export default abstract class Enemy implements SpriteSheet {
 
   constructor(game: Game) {
     this.game = game
-    this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
+    const { height, topMargin } = this.game
+    this.collisionY = topMargin + Math.random() * (height - topMargin)
     this.collisionRadius = 30
     this.frameX = 0
     this.frameY = Math.floor(Math.random() * 4)
@@ -46,7 +47,7 @@ export default abstract class Enemy implements SpriteSheet {
     else this.frameX = 0
     this.x = this.collisionX - this.width * 0.5
     this.collisionX -= this.speedX
-    if (this.x + this.width < 0 && !this.game.gameOver) {
+    if (this.x + this.width < 0 && !this.game.isOver) {
       this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
       this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin)
       this.frameY = Math.floor(Math.random() * 4)
