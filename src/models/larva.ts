@@ -1,7 +1,7 @@
-import type { Game, SpriteSheet } from '@/types'
+import type { Game, SpriteSheet, Destroyable } from '@/types'
 import { Firefly, Spark } from '@/particle'
 
-export default class Larva implements SpriteSheet {
+export default class Larva implements Destroyable<SpriteSheet> {
   public game
   public collisionX
   public collisionY
@@ -13,9 +13,9 @@ export default class Larva implements SpriteSheet {
   public y!: number
   public frameX
   public frameY
+  public markedForDeletion
   private maxFrame
   private speedY
-  public markedForDeletion
 
   constructor(game: Game, x: number, y: number) {
     this.game = game
@@ -27,9 +27,9 @@ export default class Larva implements SpriteSheet {
     this.height = 150
     this.frameX = 0
     this.frameY = Math.floor(Math.random() * 2)
+    this.markedForDeletion = false
     this.maxFrame = 38
     this.speedY = 1 + Math.random()
-    this.markedForDeletion = false
   }
 
   public create() {

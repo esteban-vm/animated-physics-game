@@ -1,4 +1,4 @@
-import type { Enemy, GameObject, Larva, Particle } from '@/types'
+import type { Destroyable, Enemy, GameObject, Larva, Particle } from '@/types'
 import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
@@ -64,9 +64,9 @@ export default class Game {
       const { player, eggs, obstacles, enemies, hatchlings, particles } = this
       this.objects = [player, ...eggs, ...obstacles, ...enemies, ...hatchlings, ...particles]
       this.objects.sort((a, b) => a.collisionY - b.collisionY)
-      this.objects.forEach((sprite) => {
-        sprite.create()
-        sprite.update(delta)
+      this.objects.forEach((object) => {
+        object.create()
+        object.update(delta)
       })
       context.drawImage(this.overlay, 0, 0)
       this.timer = 0
@@ -89,9 +89,10 @@ export default class Game {
   }
 
   public removeObjects() {
-    this.eggs = this.eggs.filter((egg) => !egg.markedForDeletion)
-    this.hatchlings = this.hatchlings.filter((hatchling) => !hatchling.markedForDeletion)
-    this.particles = this.particles.filter((particle) => !particle.markedForDeletion)
+    const callback = (object: Destroyable) => !object.markedForDeletion
+    this.eggs = this.eggs.filter(callback)
+    this.hatchlings = this.hatchlings.filter(callback)
+    this.particles = this.particles.filter(callback)
   }
 
   public checkCollision(object1: GameObject, object2: GameObject) {

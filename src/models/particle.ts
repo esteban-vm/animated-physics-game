@@ -1,28 +1,28 @@
-import type { Game, GameObject } from '@/types'
+import type { Game, GameObject, Destroyable } from '@/types'
 
-export default abstract class Particle implements GameObject {
+export default abstract class Particle implements Destroyable<GameObject> {
   public game
   public collisionX
   public collisionY
   public collisionRadius
+  public markedForDeletion
   private color
   protected speedX
   protected speedY
   protected angle
   protected va
-  public markedForDeletion
 
   constructor(game: Game, x: number, y: number, color: string) {
     this.game = game
     this.collisionX = x
     this.collisionY = y
     this.collisionRadius = Math.floor(Math.random() * 10 + 5)
+    this.markedForDeletion = false
     this.color = color
     this.speedX = Math.random() * 6 - 3
     this.speedY = Math.random() * 2 + 0.5
     this.angle = 0
     this.va = Math.random() * 0.1 + 0.01
-    this.markedForDeletion = false
   }
 
   public create() {

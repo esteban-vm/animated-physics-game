@@ -1,7 +1,7 @@
-import type { Game, Sprite } from '@/types'
+import type { Game, Sprite, Destroyable } from '@/types'
 import Larva from '@/larva'
 
-export default class Egg implements Sprite {
+export default class Egg implements Destroyable<Sprite> {
   public game
   public collisionX
   public collisionY
@@ -11,9 +11,9 @@ export default class Egg implements Sprite {
   public height
   public x!: number
   public y!: number
+  public markedForDeletion
   private hatchTimer
   private hatchInterval
-  public markedForDeletion
 
   constructor(game: Game) {
     this.game = game
@@ -23,9 +23,9 @@ export default class Egg implements Sprite {
     this.image = document.getElementById('egg') as HTMLImageElement
     this.width = 110
     this.height = 135
+    this.markedForDeletion = false
     this.hatchTimer = 0
     this.hatchInterval = 10_000
-    this.markedForDeletion = false
   }
 
   public create() {

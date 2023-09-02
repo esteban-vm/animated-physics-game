@@ -24,3 +24,4 @@ export interface SpriteSheet extends Sprite {
 
 export type * from '@/models'
 export type { default as Game } from '@/game'
+export type Destroyable<T = unknown> = T & { markedForDeletion: boolean }
