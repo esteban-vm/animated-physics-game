@@ -1,4 +1,4 @@
-import type { Destroyable, Enemy, GameObject, Larva, Particle } from '@/types'
+import type { Enemy, GameObject, Larva, Particle, Removable } from '@/types'
 import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
@@ -89,7 +89,7 @@ export default class Game {
   }
 
   public removeObjects() {
-    const callback = (object: Destroyable) => !object.markedForDeletion
+    const callback = (object: Removable) => !object.markedForDeletion
     this.eggs = this.eggs.filter(callback)
     this.hatchlings = this.hatchlings.filter(callback)
     this.particles = this.particles.filter(callback)

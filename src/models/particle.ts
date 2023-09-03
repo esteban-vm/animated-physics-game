@@ -1,6 +1,6 @@
-import type { Game, GameObject, Destroyable } from '@/types'
+import type { Game, GameObject, Removable } from '@/types'
 
-export default abstract class Particle implements Destroyable<GameObject> {
+export default abstract class Particle implements Removable<GameObject> {
   public game
   public collisionX
   public collisionY

@@ -1,7 +1,7 @@
-import type { Game, Sprite, Destroyable } from '@/types'
+import type { Game, Sprite, Removable } from '@/types'
 import Larva from '@/larva'
 
-export default class Egg implements Destroyable<Sprite> {
+export default class Egg implements Removable<Sprite> {
   public game
   public collisionX
   public collisionY

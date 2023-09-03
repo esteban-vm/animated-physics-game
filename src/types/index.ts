@@ -22,6 +22,6 @@ export interface SpriteSheet extends Sprite {
   frameY: number
 }
 
+export type { Game }
 export type * from '@/models'
-export type { default as Game } from '@/game'
-export type Destroyable<T = unknown> = T & { markedForDeletion: boolean }
+export type Removable<T = unknown> = T & { markedForDeletion: boolean }

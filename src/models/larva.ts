@@ -1,7 +1,7 @@
-import type { Game, SpriteSheet, Destroyable } from '@/types'
+import type { Game, SpriteSheet, Removable } from '@/types'
 import { Firefly, Spark } from '@/particle'
 
-export default class Larva implements Destroyable<SpriteSheet> {
+export default class Larva implements Removable<SpriteSheet> {
   public game
   public collisionX
   public collisionY
