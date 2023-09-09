@@ -3,9 +3,9 @@ import { Egg, Obstacle, Player, BarkSkin, ToadSkin } from '@/models'
 
 export default class Game {
   private canvas
-  public context
   public width
   public height
+  public context
   public player
   public debug
   public topMargin
@@ -33,8 +33,10 @@ export default class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    this.width = this.canvas.width
-    this.height = this.canvas.height
+    this.width = 1_280
+    this.height = 720
+    this.canvas.width = this.width
+    this.canvas.height = this.height
     this.context = this.canvas.getContext('2d')!
     this.player = new Player(this)
     this.debug = import.meta.env.DEV
@@ -45,12 +47,12 @@ export default class Game {
     this.interval = 1_000 / this.fps
     this.eggInterval = 500
     this.winningScore = 30
+    this.objects = []
     this.background = <HTMLImageElement>document.getElementById('background')
     this.overlay = <HTMLImageElement>document.getElementById('overlay')
     this.numberOfEggs = 5
     this.numberOfEnemies = 5
     this.numberOfObstacles = 10
-    this.objects = []
     this.init()
     this.setStyles()
     this.setListeners()
