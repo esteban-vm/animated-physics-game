@@ -22,7 +22,7 @@ export default class Larva implements Removable<SpriteSheet> {
     this.collisionX = x
     this.collisionY = y
     this.collisionRadius = 30
-    this.image = document.getElementById('larva') as HTMLImageElement
+    this.image = <HTMLImageElement>document.getElementById('larva')
     this.width = 150
     this.height = 150
     this.frameX = 0

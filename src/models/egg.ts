@@ -20,7 +20,7 @@ export default class Egg implements Removable<Sprite> {
     this.collisionX = 80 + Math.random() * (this.game.width - 160)
     this.collisionY = this.game.topMargin + Math.random() * (this.game.height - this.game.topMargin - 80)
     this.collisionRadius = 40
-    this.image = document.getElementById('egg') as HTMLImageElement
+    this.image = <HTMLImageElement>document.getElementById('egg')
     this.width = 110
     this.height = 135
     this.markedForDeletion = false

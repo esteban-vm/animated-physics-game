@@ -24,7 +24,7 @@ export default class Player implements SpriteSheet {
     this.collisionX = this.game.width * 0.5
     this.collisionY = this.game.height * 0.5
     this.collisionRadius = 30
-    this.image = document.getElementById('bull') as HTMLImageElement
+    this.image = <HTMLImageElement>document.getElementById('bull')
     this.width = 255
     this.height = 256
     this.frameX = 0

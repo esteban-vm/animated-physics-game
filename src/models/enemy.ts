@@ -79,7 +79,7 @@ export class ToadSkin extends Enemy {
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('toad') as HTMLImageElement
+    this.image = <HTMLImageElement>document.getElementById('toad')
     this.width = 154
     this.height = 238
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
@@ -100,7 +100,7 @@ export class BarkSkin extends Enemy {
 
   constructor(game: Game) {
     super(game)
-    this.image = document.getElementById('bark') as HTMLImageElement
+    this.image = <HTMLImageElement>document.getElementById('bark')
     this.width = 183
     this.height = 280
     this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5
