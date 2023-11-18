@@ -10,6 +10,7 @@
 - [Prettier](https://prettier.io/ 'Prettier')
 
 ## Controls:
+
 - use the **mouse** to move the player
 - **R**: restart game
 - **F**: enter/exit fullscreen mode
